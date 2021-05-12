@@ -25,11 +25,6 @@
     border-radius: 2px 15px;
     border:2px solid #343f56;
   }
-  .navbar ul li .dropdown-item{
-    background-color: #343f56;
-    border-radius: 2px 15px;
-    border:2px solid #343f56;
-  }
   .navbar ul li .nav-link:hover{
     background-color: #1e212d;
     border-radius: 2px 15px;
@@ -114,4 +109,17 @@
     .navbar ul{
         margin-left: 0!important;
     }
+
+    .navbar li {
+      border-bottom: 1px solid white;
+    }
+    .navbar .dropdown-menu li{
+      border:0;
+
+    }
+    .navbar ul li .dropdown-item{
+      background-color: #232a38;
+    }
+
+
 }

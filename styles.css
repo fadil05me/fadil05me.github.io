@@ -4,7 +4,7 @@
   }
   @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400&display=swap');
   body{
-    font-family: 'Comic Neue', cursive;
+    font-family: 'Comic Neue', sans-serif;
     font-style: normal;
     color: white;
     margin: 0px;

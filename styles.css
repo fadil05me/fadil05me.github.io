@@ -97,6 +97,13 @@
   .card-header:first-child{
     border-radius: 0;
   }
+  .card-body{
+    padding: 5rem;
+  }
+  .card-text{
+    line-height: 2rem;
+    font-weight: 500;
+  }
 
 
 

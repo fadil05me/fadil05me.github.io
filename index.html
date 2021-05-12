@@ -8,146 +8,42 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
 
-    <style>
-    @font-face {
-      font-family: Valorant;
-      src: url("Valorant.ttf");
-    }
-    @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400&display=swap');
-    body{
-      font-family: 'Comic Neue', cursive;
-      font-style: normal;
-      color: white;
-      margin: 0px;
-      background-color: #f0f0f0;
-      font-size : 1.4rem;
-    }
-    .navbar{
-      font-weight: 700;
-      font-size: 1.3rem;
-      background-color: #1e212d; 
-    }
-    .navbar ul{
-      margin-top:20px;
-      margin-bottom: 0;
-    }
-    .navbar ul li .active{
-      background-color: #343f56;
-      border-radius: 2px 15px;
-      border:2px solid #343f56;
-    }
-    .navbar ul li .dropdown-item{
-      background-color: #343f56;
-      border-radius: 2px 15px;
-      border:2px solid #343f56;
-    }
-    .navbar ul li .nav-link:hover{
-      background-color: #1e212d;
-      border-radius: 2px 15px;
-      border:2px solid white;
-      transition:width 1s ease-in;
-    }
-    .navbar li .nav-link{
-      color:#ffffff!important;
-      margin-right: 1rem;
-
-      border-radius: 2px 15px;
-      border:2px solid #1e212d;
-    }
-    .navbar ul .dropdown-menu{
-      background-color: transparent;
-      border: 0;
-    }
-    .navbar ul li .dropdown-item{
-      color:white;
-      background-color: #1e212d;
-      margin-bottom: .1rem;
-      border-radius: 2px 15px;
-      border:2px solid #1e212d;
-    }
-    .navbar ul li .dropdown-item:hover{
-      background-color: #343f56;
-      border-radius: 2px 15px;
-      border:2px solid #ffffff;
-    }
-    .jumbotron{
-      background: #111116;
-      margin-bottom: 0px;
-      height: 400px;
-      padding: 0px;
-      position: relative;
-    }
-    #pic{
-      margin-left: -81px;
-      margin-top: 95.5px;
-      position: absolute; z-index: 1;
-      border: 2px solid #0195fb;
-    }
-    #pic:hover{
-      border:2px solid #ffffff;
-    }
-    .logo{
-      font-size: 2rem;
-      font-family: Valorant;
-      width: 20%;
-    }
-    .anim, .anim svg {
-      position: relative;
-      width: 100%;
-      height: 100%;
-    }
-    .anim path {
-      stroke-width: 2;
-    }
-    .title{
-      background-color: #1e212d; 
-      color: #ffffff;
-      height: 150px;
-      font-size: 2rem;
-    }
-    .card{
-      font-weight: 700;
-      color: #555;
-      border:0;
-    }
-    .card-header:first-child{
-      border-radius: 0;
-    }
-    </style>
+    <link rel='stylesheet' href='styles.css' type='text/css' media='all' />
 
   </head>
   <body>
 
 <!--		Header		-->
-    <nav class="navbar navbar-expand-lg pb-0 navbar-dark">
-      <div class="container-fluid">
-        <a class="navbar-brand logo" id="logo" href="">Fadil05Me</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav ps-5 ms-5 mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active py-3 px-4" aria-current="page" href="#">HOME</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link py-3 px-4" href="#">Link</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle py-3 px-4" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Dropdown
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
-              </ul>
-            </li>
-          </ul>
+    <div class="header">
+      <nav class="navbar navbar-expand-lg pb-0 navbar-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand logo" id="logo" onclick="$('#logo').glitch();" href="">Fadil05Me</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active py-3 px-4" aria-current="page" href="#">HOME</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link py-3 px-4" href="#">Link</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle py-3 px-4" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Dropdown
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="#">Action</a></li>
+                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
-    </nav>
-
+      </nav>
+    </div>
 <!-- Content -->
     <div class="jumbotron">
       <div class="text-center">

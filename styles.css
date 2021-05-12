@@ -127,6 +127,8 @@
     .navbar ul li .dropdown-item{
       background-color: #232a38;
     }
-
+    .card-body{
+      padding: 20px;
+    }
 
 }

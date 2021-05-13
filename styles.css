@@ -2,9 +2,9 @@
     font-family: Valorant;
     src: url("Valorant.ttf");
   }
-  @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Handlee&display=swap');
   body{
-    font-family: 'Comic Neue', sans-serif;
+    font-family: 'Handlee', cursive;
     font-style: normal;
     color: white;
     margin: 0px;
@@ -89,6 +89,28 @@
     height: 150px;
     font-size: 2rem;
   }
+  #footer{
+    background-color: #1e212d; 
+    margin-top: 200px;
+    padding-top: 2rem;
+    text-align: center;
+  }
+  .social a{
+    font-size: 2rem;
+    color: #ffffff;
+    text-decoration: none;
+    margin-right: 1rem;
+  }
+  .social a:hover{
+    color: #b3b9c7;
+  }
+  .line{
+    border-bottom:2px solid #ffffff;
+    width:50%;
+    margin: 0 auto;
+    margin-top: 5px;
+    margin-bottom: 10px;
+  }
   .card{
     font-weight: 700;
     color: #555;
@@ -98,11 +120,13 @@
     border-radius: 0;
   }
   .card-body{
+    background-color: #f0f0f0;
     padding: 5rem;
   }
   .card-text{
     line-height: 2rem;
     font-weight: 500;
+    color: black;
   }
 
 

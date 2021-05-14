@@ -10,7 +10,7 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel='stylesheet' href='styles.css' type='text/css' media='all' />
 
   </head>
@@ -20,21 +20,27 @@
     <div class="header">
       <nav class="navbar navbar-expand-lg pb-0 navbar-dark">
         <div class="container-fluid">
-          <a class="navbar-brand logo" id="logo" onclick="$('#logo').glitch();" href="">Fadil05Me</a>
+          <a class="navbar-brand logo animate__animated animate__bounceInDown" id="logo" onclick="$('#logo').glitch();" href="">Fadil05Me</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active py-3 px-4" aria-current="page" href="#">HOME</a>
+                <a class="nav-link active py-3 px-4" aria-current="page" href="#">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link py-3 px-4" href="#">LINK</a>
+                <a class="nav-link py-3 px-4" href="#aboutme">About Me</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link py-3 px-4" href="#ach">Achievements</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link py-3 px-4" href="#ach">Hobby</a>
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle py-3 px-4" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  DROPDOWN
+                  Dropdown
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <li><a class="dropdown-item" href="#">Action</a></li>
@@ -47,6 +53,7 @@
         </div>
       </nav>
     </div>
+    
 <!-- Content -->
     <div class="jumbotron">
       <div class="text-center">
@@ -60,12 +67,12 @@
     </div>
 
     <div class="card">
-      <div class="title d-flex justify-content-center align-items-center card-header">
+      <div id="aboutme" class="title d-flex justify-content-center align-items-center card-header">
         About Me
       </div>
       <div class="card-body">
         <p class="card-text">
-          Hello... My Name is Ahmad Fadillah
+          Hello... My Name is Ahmad Fadillah.
         </p>
         <p class="card-text">
           I currently lived in Jakarta.
@@ -79,6 +86,9 @@
         <p class="card-text">
           I graduated from STIKOM Al - Khairiyah in December 2020, with a bachelor's degree in Informatics Engineering.
         </p>
+        <p class="card-text">
+          I also graduated from Vocational High School in 2016, taking a major in Software Engineering.
+        </p>
 
         </p>
       </div>
@@ -86,7 +96,7 @@
 
 
     <div class="card">
-      <div class="title d-flex justify-content-center align-items-center card-header">
+      <div id="ach" class="title d-flex justify-content-center align-items-center card-header">
         Achievements
       </div>
       <div class="card-body">

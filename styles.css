@@ -131,7 +131,10 @@
     font-weight: 500;
     color: black;
   }
-
+  .games{
+    width: 20%;
+    height: 20%;
+  }
 
 
   @media only screen and (max-width: 992px) {
@@ -144,7 +147,7 @@
         margin-left: 0!important;
     }
 
-    .navbar li {
+    .navbar li{
       border-bottom: 1px solid white;
     }
     .navbar .dropdown-menu li{
@@ -157,5 +160,9 @@
     .card-body{
       padding: 20px;
     }
+    .games{
+      width: 40%;
+      height: 40%;
+    }   
 
 }

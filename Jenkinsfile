@@ -25,6 +25,28 @@ pipeline {
         }
 
 
+        stage('Checking website using wget spider') {
+            steps {
+                script {
+                    sshagent(credentials: ['sshkey']) {
+                        sh """
+                            ssh -o StrictHostKeyChecking=no ${SERVER} << 'EOF'
+                            if wget --spider -q --server-response  https://jen.fadil05me.my.id/ 2>&1 then
+                                echo "Website is up!"
+                            else
+                                echo "Website is down!"
+                                exit 1
+                            fi
+                            echo "Selesai Testing!"
+                            exit
+                            EOF
+                            """
+                    }
+                }
+            }
+        }
+
+
     }
 
 }

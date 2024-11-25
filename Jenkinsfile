@@ -4,10 +4,6 @@ pipeline {
     
     environment {
         SERVER = 'azureuser@20.205.24.80'
-        BRANCH = 'master'
-        REPO_URL = 'git@github.com:fadil05me/fadil05me.github.io.git'
-        REGISTRY_URL = 'registry.fadil.studentdumbways.my.id'
-        IMAGE_NAME = 'be-dumbmerch-staging'
     }
     
     stages {

@@ -37,30 +37,6 @@ pipeline {
         }
         
         
-        stage('Start docker container') {
-            steps {
-                script {
-                    sshagent(credentials: ['sshkey']) {
-                        // Read version from file and run Docker container
-                        sh """
-                        ssh -p ${SSH_PORT} -o StrictHostKeyChecking=no ${BUILD_SERVER} << 'EOF'
-                        cd ${DIRECTORY}
-                        
-                        # Read version from file
-                        version=\$(cat ${DIRECTORY}/version)
-                        echo "Using version: \${version}"
-                        
-                        # Run Docker container using the retrieved version
-                        docker run -d --name testcode-be -p 5000:5000 "${REGISTRY_URL}/${IMAGE_NAME}:\${version}"
-                        echo "Docker container started with image tag: \${version}"
-                        
-                        exit
-                        EOF
-                        """
-                    }
-                }
-            }
-        }
 
         stage('Checking website using wget spider') {
             steps {

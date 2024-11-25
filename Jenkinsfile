@@ -38,7 +38,6 @@ stage('Checking website using curl') {
                     exit 1
                 fi
                 echo "Selesai Testing!"
-                EOF
                 """
             }
         }

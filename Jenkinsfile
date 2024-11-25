@@ -25,16 +25,16 @@ pipeline {
         }
 
 
-stage('Checking website using wget spider') {
+stage('Checking website using curl') {
     steps {
         script {
             sshagent(credentials: ['sshkey']) {
                 sh """
                 ssh -o StrictHostKeyChecking=no ${SERVER} << 'EOF'
-                if wget --spider -q --server-response https://jen.fadil05me.my.id/ 2>&1 | grep "200 OK" > /dev/null; then
+                if curl -s -o /dev/null -w "%{http_code}" -A "Mozilla/5.0" https://jen.fadil05me.my.id/ | grep -q "200"; then
                     echo "Website is up!"
                 else
-                    echo "Website is down!"
+                    echo "Website is down or inaccessible!"
                     exit 1
                 fi
                 echo "Selesai Testing!"
@@ -44,6 +44,7 @@ stage('Checking website using wget spider') {
         }
     }
 }
+
 
 
 

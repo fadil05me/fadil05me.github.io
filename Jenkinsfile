@@ -39,6 +39,6 @@ pipeline {
         //          sh 'kubectl apply -f deployment.yaml'
           //    }
           //}
-        }
+//        }
     }
 }

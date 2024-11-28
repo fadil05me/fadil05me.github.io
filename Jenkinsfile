@@ -36,7 +36,7 @@ pipeline {
     //            echo 'Deploying to Kubernetes...'
       //          withKubeConfig(caCertificate: '', clusterName: '', contextName: '', namespace: 'default', serverUrl: '') {
         //            // Apply Kubernetes manifest (replace deployment.yaml with your file)
-          //          sh 'kubectl apply -f deployment.yaml'
+        //          sh 'kubectl apply -f deployment.yaml'
           //    }
           //}
         }

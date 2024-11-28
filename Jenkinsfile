@@ -38,7 +38,7 @@ pipeline {
         //            // Apply Kubernetes manifest (replace deployment.yaml with your file)
           //          sh 'kubectl apply -f deployment.yaml'
             //    }
-            //}
+          //}
         }
     }
 }

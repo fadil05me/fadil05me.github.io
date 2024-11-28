@@ -4,13 +4,15 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'fadil05me/fadil05me.github.io:latest'  // Your Docker image name
         DOCKER_REGISTRY_CREDENTIALS = 'dockerhub-credentials'  // Jenkins credential ID for Docker Hub
+        SERVER_CREDENTIALS = 'server'
+        SSH_KEY_CREDENTIALS = 'github'  // The SSH key credential ID you added to Jenkins
     }
 
     stages {
         stage('Checkout') {
             steps {
                 echo 'Checking out code from GitHub...'
-                git branch: 'main', url: 'git@github.com:fadil05me/fadil05me.github.io.git'
+                git credentialsId: SSH_KEY_CREDENTIALS, branch: 'master', url: 'git@github.com:fadil05me/fadil05me.github.io.git'
             }
         }
 
@@ -31,14 +33,13 @@ pipeline {
             }
         }
 
-//        stage('Deploy') {
-  //          steps {
-    //            echo 'Deploying to Kubernetes...'
-      //          withKubeConfig(caCertificate: '', clusterName: '', contextName: '', namespace: 'default', serverUrl: '') {
-        //            // Apply Kubernetes manifest (replace deployment.yaml with your file)
-        //          sh 'kubectl apply -f deployment.yaml'
-          //    }
-          //}
-//        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying to Kubernetes...'
+                sh 'kubectl apply -f ../../deploy/deploy.yaml'
+                sh 'kubectl rollout status deployment/fadil05me-web'
+            }
+        }
+
     }
 }

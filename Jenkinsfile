@@ -45,5 +45,19 @@ pipeline {
                 }
             }
         }
+
+        stage('Rollback') {
+            when {
+                expression { params.ROLLBACK == 'true' }
+            }
+            steps {
+                echo 'Rolling back to the previous version of the deployment...'
+                withKubeConfig([credentialsId: 'kubecfg']) {
+                    // Rollback to the previous deployment revision
+                    sh "kubectl rollout undo deployment/${DEPLOYMENT_NAME}"
+                }
+            }
+        }
+
     }
 }

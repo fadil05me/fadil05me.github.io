@@ -19,6 +19,7 @@ spec:
      containers:
      - name: fadil05me-web
        image: fadil05me/fadil05me.github.io:latest  # private Docker image
+       imagePullPolicy: Always
        ports:
        - containerPort: 80
 ---

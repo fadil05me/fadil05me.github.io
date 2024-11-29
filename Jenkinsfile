@@ -2,10 +2,12 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'fadil05me/fadil05me.github.io:latest'  // Your Docker image name
-        DOCKER_REGISTRY_CREDENTIALS = 'dockerhub-credentials'  // Jenkins credential ID for Docker Hub
+        DOCKER_IMAGE_BASE = 'fadil05me/fadil05me.github.io'
+        DOCKER_REGISTRY_CREDENTIALS = 'dockerhub-credentials'
         SERVER_CREDENTIALS = 'server'
-        SSH_KEY_CREDENTIALS = 'github'  // The SSH key credential ID you added to Jenkins
+        SSH_KEY_CREDENTIALS = 'github'
+        IMAGE_TAG = "${env.BUILD_NUMBER}"  // Generate dynamic tag
+        DOCKER_IMAGE = "${DOCKER_IMAGE_BASE}:${IMAGE_TAG}"  // Final image with tag
     }
 
     stages {
@@ -37,12 +39,11 @@ pipeline {
             steps {
                 echo 'Deploying to Kubernetes...'
                 withKubeConfig([credentialsId: 'kubecfg']) {
-                    sh 'kubectl apply -f deploy.yaml'
+                    sh "sed 's#__DOCKER_IMAGE__#${DOCKER_IMAGE}#' deploy.yaml > deploy_processed.yaml"  // Replace placeholder
+                    sh "kubectl apply -f deploy_processed.yaml"  // Apply the modified file
                     sh 'kubectl rollout restart deployment fadil05me-web'  // Restart deployment
-
                 }
             }
         }
-
     }
 }

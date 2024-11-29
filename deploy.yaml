@@ -1,38 +1,38 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
- name: fadil05me-web
- labels:
-   app: fadil05me-web
+  name: fadil05me-web
+  labels:
+    app: fadil05me-web
 spec:
- revisionHistoryLimit: 2
- replicas: 1
- selector:
-   matchLabels:
-     app: fadil05me-web
- template:
-   metadata:
-     labels:
-       app: fadil05me-web
-   spec:
-     imagePullSecrets:
-       - name: dockerhub-secret  # Secret
-     containers:
-     - name: fadil05me-web
-       image: fadil05me/fadil05me.github.io:latest  # private Docker image
-       imagePullPolicy: Always
-       ports:
-       - containerPort: 80
+  revisionHistoryLimit: 2
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fadil05me-web
+  template:
+    metadata:
+      labels:
+        app: fadil05me-web
+    spec:
+      imagePullSecrets:
+        - name: dockerhub-secret  # Secret
+      containers:
+        - name: fadil05me-web
+          image: __DOCKER_IMAGE__  # Placeholder to be replaced with Jenkins
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
 metadata:
- name: fadil05me-web-service
+  name: fadil05me-web-service
 spec:
- selector:
-   app: fadil05me-web
- ports:
-   - protocol: TCP
-     port: 80
-     targetPort: 80
- type: LoadBalancer
+  selector:
+    app: fadil05me-web
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer

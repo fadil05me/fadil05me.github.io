@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'fadil05me/fadil05me.github.io:latest'  // Your Docker image name
+        DOCKER_IMAGE = 'fadil05me/fadil05me.github.io:1.0'  // Your Docker image name
         DOCKER_REGISTRY_CREDENTIALS = 'dockerhub-credentials'  // Jenkins credential ID for Docker Hub
         SERVER_CREDENTIALS = 'server'
         SSH_KEY_CREDENTIALS = 'github'  // The SSH key credential ID you added to Jenkins

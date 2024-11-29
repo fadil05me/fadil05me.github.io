@@ -11,6 +11,28 @@ pipeline {
     }
 
     stages {
+
+        stage('Rollback') {
+            when {
+                expression { params.ROLLBACK == 'true' }  // Only trigger if ROLLBACK is true
+            }
+            steps {
+                echo 'Rolling back to the previous version of the deployment...'
+                withKubeConfig([credentialsId: 'kubecfg']) {
+                    // Rollback to the previous deployment revision
+                    sh "kubectl rollout undo deployment/${DEPLOYMENT_NAME}"
+                }
+                script {
+                    // Prevent further stages from running
+                    currentBuild.result = 'SUCCESS'
+                    // Abort pipeline to stop further execution
+                    error('Rollback completed, stopping pipeline execution.')
+                }
+            }
+        }
+
+
+
         stage('Checkout') {
             steps {
                 echo 'Checking out code from GitHub...'
@@ -42,19 +64,6 @@ pipeline {
                     sh "sed 's#__DOCKER_IMAGE__#${DOCKER_IMAGE}#' deploy.yaml > deploy_processed.yaml"  // Replace placeholder
                     sh "kubectl apply -f deploy_processed.yaml"  // Apply the modified file
                     sh 'kubectl rollout restart deployment fadil05me-web'  // Restart deployment
-                }
-            }
-        }
-
-        stage('Rollback') {
-            when {
-                expression { params.ROLLBACK == 'true' }
-            }
-            steps {
-                echo 'Rolling back to the previous version of the deployment...'
-                withKubeConfig([credentialsId: 'kubecfg']) {
-                    // Rollback to the previous deployment revision
-                    sh "kubectl rollout undo deployment/${DEPLOYMENT_NAME}"
                 }
             }
         }

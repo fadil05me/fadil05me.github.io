@@ -8,6 +8,7 @@ pipeline {
         SSH_KEY_CREDENTIALS = 'github'
         IMAGE_TAG = "${env.BUILD_NUMBER}"  // Generate dynamic tag
         DOCKER_IMAGE = "${DOCKER_IMAGE_BASE}:${IMAGE_TAG}"  // Final image with tag
+        DEPLOYMENT_NAME = 'fadil05me-web'
     }
 
     stages {

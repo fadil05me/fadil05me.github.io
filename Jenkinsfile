@@ -38,6 +38,8 @@ pipeline {
                 echo 'Deploying to Kubernetes...'
                 withKubeConfig([credentialsId: 'kubecfg']) {
                     sh 'kubectl apply -f deploy.yaml'
+                    sh 'kubectl rollout restart deployment fadil05me-web'  // Restart deployment
+
                 }
             }
         }

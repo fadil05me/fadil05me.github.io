@@ -18,15 +18,16 @@ pipeline {
                 expression { params.ROLLBACK == 'true' }  // Only trigger if ROLLBACK is true
             }
             steps {
+                script {
                 echo 'Rolling back to the previous version of the deployment...'
                 withKubeConfig([credentialsId: 'kubecfg']) {
                     // Rollback to the previous deployment revision
                     sh "kubectl rollout undo deployment/${DEPLOYMENT_NAME}"
                 }
-                script {
+
                     // Prevent further stages from running
                     currentBuild.result = 'SUCCESS'
-                    return
+                    env.SKIP_REMAINING_STAGES = 'true'
                 }
             }
         }

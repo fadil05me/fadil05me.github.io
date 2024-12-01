@@ -11,7 +11,7 @@ pipeline {
         DEPLOYMENT_NAME = 'fadil05me-web'
     }
 
-    stages {
+    stagess {
 
         stage('Checkout') {
             steps {

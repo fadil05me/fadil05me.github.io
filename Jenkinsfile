@@ -26,8 +26,7 @@ pipeline {
                 script {
                     // Prevent further stages from running
                     currentBuild.result = 'SUCCESS'
-                    // Abort pipeline to stop further execution
-                    error('Rollback completed, stopping pipeline execution.')
+                    return
                 }
             }
         }

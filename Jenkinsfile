@@ -47,7 +47,7 @@ pipeline {
 
                         // Find the latest valid tag
                         def rollbackTag = null
-                        for (int i = 0; i < tags.size(); i++) {
+                        for (int i = 1; i < tags.size(); i++) {
                             def tag = tags[i]
                             if (tag.isInteger()) {  // Check if the tag is a valid number
                                 rollbackTag = tag.toInteger()
@@ -67,15 +67,17 @@ pipeline {
                             sh "kubectl apply -f deploy_processed.yaml"  // Apply the modified file
                             sh 'kubectl rollout restart deployment fadil05me-web'  // Restart deployment
                         }
-                    }
 
-                    echo "Rollback to tag ${env.TAG_TO_USE} successful."
+                    echo "Rollback to tag ${rollbackTag} successful."
+                    
+                    }
                 
 
                     // Prevent further stages from running
                     currentBuild.result = 'SUCCESS'
                     // Set a flag to skip remaining stages
                     env.SKIP_REMAINING_STAGES = 'true'
+
                 }
             }
         }

@@ -4,14 +4,13 @@ pipeline {
     environment {
         DOCKER_IMAGE_BASE = 'fadil05me/fadil05me.github.io'
         DOCKER_REGISTRY_CREDENTIALS = 'dockerhub-credentials'
-        SERVER_CREDENTIALS = 'server'
         SSH_KEY_CREDENTIALS = 'github'
         IMAGE_TAG = "${env.BUILD_NUMBER}"  // Generate dynamic tag
         DOCKER_IMAGE = "${DOCKER_IMAGE_BASE}:${IMAGE_TAG}"  // Final image with tag
         DEPLOYMENT_NAME = 'fadil05me-web'
     }
 
-    stagess {
+    stages {
 
         stage('Checkout') {
             steps {
@@ -26,31 +25,59 @@ pipeline {
             }
             steps {
                 script {
-                    echo 'Rolling back to the previous version of the deployment...'
 
-                    def previousBuild = currentBuild.previousBuild  // Start with the immediate previous build
-                    while (previousBuild) {  // Loop through previous builds
-                        def prevStatus = previousBuild.result ?: 'UNKNOWN'
-                        def prevBuildNumber = previousBuild.number
-                        
-                        if (prevStatus == 'SUCCESS') {
-                            echo "The latest successful build is #${prevBuildNumber}."
-                            withKubeConfig([credentialsId: 'kubecfg']) {
-                                sh "sed 's#__DOCKER_IMAGE__#${DOCKER_IMAGE_BASE}:${prevBuildNumber}#' deploy.yaml > deploy_processed.yaml"  // Replace placeholder
-                                sh "kubectl apply -f deploy_processed.yaml"  // Apply the modified file
-                                sh 'kubectl rollout restart deployment fadil05me-web'  // Restart deployment
+                    echo 'Fetching the latest tag from Docker Hub...'
+
+                    // Authenticate with Docker Hub
+                    withCredentials([usernamePassword(credentialsId: DOCKER_REGISTRY_CREDENTIALS, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        // Get the latest tag from Docker Hub
+                        def latestTag = sh(script: """
+                            curl -u ${DOCKER_USER}:${DOCKER_PASS} -s https://registry.hub.docker.com/v2/repositories/${DOCKER_IMAGE_BASE}/tags/ | \
+                            jq -r '.results[0].name'
+                        """, returnStdout: true).trim()
+
+                        echo "The latest tag in Docker Hub is: ${latestTag}"
+
+                        // Attempt to find the previous tag by decrementing the version number
+                        def tagFound = false
+                        def tagToCheck = latestTag.toInteger()
+
+                        // Loop to check if the tag exists
+                        while (!tagFound && tagToCheck > 0) {
+                            tagToCheck--
+                            echo "Checking for tag: ${tagToCheck}"
+
+                            def tagExists = sh(script: """
+                                curl -u ${DOCKER_USER}:${DOCKER_PASS} -s https://registry.hub.docker.com/v2/repositories/${DOCKER_IMAGE_BASE}/tags/${tagToCheck} | \
+                                jq -e '.name' > /dev/null 2>&1
+                            """, returnStatus: true)
+
+                            if (tagExists == 0) {
+                                echo "Found tag ${tagToCheck}, using this for rollback."
+                                tagFound = true
+                                env.TAG_TO_USE = tagToCheck.toString()
+                            } else {
+                                echo "Tag ${tagToCheck} not found, trying the previous one."
                             }
-                            break  // Exit the loop once a successful build is found
-                        } else {
-                            echo "Build #${prevBuildNumber} failed. Checking the build before it..."
-                            previousBuild = previousBuild.previousBuild  // Move to the earlier build
+                        }
+
+                        // If no valid tag found, print an error message
+                        if (!tagFound) {
+                            error "No valid tags found for rollback."
                         }
                     }
-                    
-                    // If no successful build was found
-                    if (!previousBuild) {
-                        echo "No successful builds found in history."
+
+                    echo "Rolling back to image with tag ${env.TAG_TO_USE}..."
+
+                    withKubeConfig([credentialsId: 'kubecfg']) {
+                        // Set the image tag to the one found during the search
+                        sh """
+                            kubectl set image deployment/${DEPLOYMENT_NAME} ${DEPLOYMENT_NAME}=${DOCKER_IMAGE_BASE}:${env.TAG_TO_USE}
+                            kubectl rollout restart deployment ${DEPLOYMENT_NAME}
+                        """
                     }
+
+                    echo "Rollback to tag ${env.TAG_TO_USE} successful."
                 
 
                     // Prevent further stages from running

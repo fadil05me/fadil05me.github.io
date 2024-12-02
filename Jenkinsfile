@@ -29,52 +29,44 @@ pipeline {
                     echo 'Fetching the latest tag from Docker Hub...'
 
                     // Authenticate with Docker Hub
-                    withCredentials([usernamePassword(credentialsId: DOCKER_REGISTRY_CREDENTIALS, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        // Get the latest tag from Docker Hub
-                        def latestTag = sh(script: """
-                            curl -u ${DOCKER_USER}:${DOCKER_PASS} -s https://registry.hub.docker.com/v2/repositories/${DOCKER_IMAGE_BASE}/tags/ | \
-                            jq -r '.results[0].name'
+                    withCredentials([string(credentialsId: 'tokenHub', variable: 'DOCKER_TOKEN')]) {
+                        def dockerUser = 'fadil05me'  // Replace with your actual Docker Hub username
+                        def apiResponse = sh(script: """
+                            export DOCKER_TOKEN=${DOCKER_TOKEN}
+                            curl -s -H "Authorization: Bearer \$DOCKER_TOKEN" \\
+                            https://hub.docker.com/v2/repositories/${dockerUser}/${DOCKER_IMAGE_BASE}/tags/
                         """, returnStdout: true).trim()
+                        
+                        echo "Docker Hub API Response: ${apiResponse}"
 
-                        echo "The latest tag in Docker Hub is: ${latestTag}"
+                        // Parse the tags from the response
+                        def tags = readJSON(text: apiResponse).results*.name
 
-                        // Attempt to find the previous tag by decrementing the version number
-                        def tagFound = false
-                        def tagToCheck = latestTag.toInteger()
+                        // Get the latest tag
+                        def latestTag = tags[0]  // Assuming tags are sorted in descending order (newest first)
 
-                        // Loop to check if the tag exists
-                        while (!tagFound && tagToCheck > 0) {
-                            tagToCheck--
-                            echo "Checking for tag: ${tagToCheck}"
-
-                            def tagExists = sh(script: """
-                                curl -u ${DOCKER_USER}:${DOCKER_PASS} -s https://registry.hub.docker.com/v2/repositories/${DOCKER_IMAGE_BASE}/tags/${tagToCheck} | \
-                                jq -e '.name' > /dev/null 2>&1
-                            """, returnStatus: true)
-
-                            if (tagExists == 0) {
-                                echo "Found tag ${tagToCheck}, using this for rollback."
-                                tagFound = true
-                                env.TAG_TO_USE = tagToCheck.toString()
-                            } else {
-                                echo "Tag ${tagToCheck} not found, trying the previous one."
+                        // Find the latest valid tag
+                        def rollbackTag = null
+                        for (int i = 0; i < tags.size(); i++) {
+                            def tag = tags[i]
+                            if (tag.isInteger()) {  // Check if the tag is a valid number
+                                rollbackTag = tag.toInteger()
+                                break
                             }
                         }
 
-                        // If no valid tag found, print an error message
-                        if (!tagFound) {
-                            error "No valid tags found for rollback."
+                        if (rollbackTag == null) {
+                            error "No valid tags found in the Docker Hub repository."
                         }
-                    }
 
-                    echo "Rolling back to image with tag ${env.TAG_TO_USE}..."
+                        echo "The latest valid tag for rollback is: ${rollbackTag}"
 
-                    withKubeConfig([credentialsId: 'kubecfg']) {
-                        // Set the image tag to the one found during the search
-                        sh """
-                            kubectl set image deployment/${DEPLOYMENT_NAME} ${DEPLOYMENT_NAME}=${DOCKER_IMAGE_BASE}:${env.TAG_TO_USE}
-                            kubectl rollout restart deployment ${DEPLOYMENT_NAME}
-                        """
+                        // Deploy using the rollback tag
+                        withKubeConfig([credentialsId: 'kubecfg']) {
+                            sh "sed 's#__DOCKER_IMAGE__#${DOCKER_IMAGE_BASE}:${rollbackTag}#' deploy.yaml > deploy_processed.yaml"  // Replace placeholder
+                            sh "kubectl apply -f deploy_processed.yaml"  // Apply the modified file
+                            sh 'kubectl rollout restart deployment fadil05me-web'  // Restart deployment
+                        }
                     }
 
                     echo "Rollback to tag ${env.TAG_TO_USE} successful."

@@ -34,7 +34,7 @@ pipeline {
                         def apiResponse = sh(script: """
                             export DOCKER_TOKEN=${DOCKER_TOKEN}
                             curl -s -H "Authorization: Bearer \$DOCKER_TOKEN" \\
-                            https://hub.docker.com/v2/repositories/${dockerUser}/${DOCKER_IMAGE_BASE}/tags/
+                            https://hub.docker.com/v2/repositories/${DOCKER_IMAGE_BASE}/tags/
                         """, returnStdout: true).trim()
                         
                         echo "Docker Hub API Response: ${apiResponse}"

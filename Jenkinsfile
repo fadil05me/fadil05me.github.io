@@ -25,27 +25,20 @@ pipeline {
             }
             steps {
                 script {
-
                     echo 'Fetching the latest tag from Docker Hub...'
 
-                    // Authenticate with Docker Hub
+                    // Authenticate with Docker Hub and fetch tags
                     withCredentials([string(credentialsId: 'tokenHub', variable: 'DOCKER_TOKEN')]) {
-                        def dockerUser = 'fadil05me'  // Replace with your actual Docker Hub username
                         def apiResponse = sh(script: """
                             export DOCKER_TOKEN=${DOCKER_TOKEN}
                             curl -s -H "Authorization: Bearer \$DOCKER_TOKEN" \\
                             https://hub.docker.com/v2/repositories/${DOCKER_IMAGE_BASE}/tags/
                         """, returnStdout: true).trim()
-                        
-                        echo "Docker Hub API Response: ${apiResponse}"
 
                         // Parse the tags from the response
                         def tags = readJSON(text: apiResponse).results*.name
 
-                        // Get the latest tag
-                        def latestTag = tags[0]  // Assuming tags are sorted in descending order (newest first)
-
-                        // Find the latest valid tag
+                        // Get the previous tag
                         def rollbackTag = null
                         for (int i = 1; i < tags.size(); i++) {
                             def tag = tags[i]
@@ -59,7 +52,7 @@ pipeline {
                             error "No valid tags found in the Docker Hub repository."
                         }
 
-                        echo "The latest valid tag for rollback is: ${rollbackTag}"
+                        echo "The rollback tag is: ${rollbackTag}"
 
                         // Deploy using the rollback tag
                         withKubeConfig([credentialsId: 'kubecfg']) {
@@ -68,16 +61,12 @@ pipeline {
                             sh 'kubectl rollout restart deployment fadil05me-web'  // Restart deployment
                         }
 
-                    echo "Rollback to tag ${rollbackTag} successful."
-                    
+                        echo "Rollback to tag ${rollbackTag} successful."
                     }
-                
-
-                    // Prevent further stages from running
+                    
+                    // Skip remaining stages
                     currentBuild.result = 'SUCCESS'
-                    // Set a flag to skip remaining stages
                     env.SKIP_REMAINING_STAGES = 'true'
-
                 }
             }
         }
@@ -100,7 +89,8 @@ pipeline {
                 echo 'Pushing Docker image to private registry...'
                 withCredentials([usernamePassword(credentialsId: DOCKER_REGISTRY_CREDENTIALS, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh "docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}"
-                    sh "docker push ${DOCKER_IMAGE}"
+                    sh "docker push ${DOCKER_IMAGE}" // Push the tag version
+                    sh "docker push ${DOCKER_IMAGE_BASE}:latest" // Push the latest version
                 }
             }
         }
